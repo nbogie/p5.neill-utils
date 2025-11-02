@@ -1,8 +1,21 @@
+/**
+ * Call the given function repeatedly, the given number of times.
+ * @param numRepeats number of times to call the given function
+ * @param fn function to call repeatedly.  Will be passed the zero-based count of the current iteration
+ * @see {@link collect} - if you want to collect the returned values from the function instead.
+ *
+ */
 function repeat(numRepeats: number, fn: (ix: number) => void): void {
     for (let i = 0; i < numRepeats; i++) {
         fn(i);
     }
 }
+/**
+ * Builds and returns an array collected from the repeated calling of the given function.
+ * @param numItems number of items to collect
+ * @param fn function to call repeatedly in order to construct each element of the array.  It will be passed a counter (zero-based) indicating the number of the current iteration.
+ * @returns array of constructed items
+ */
 function collect<Item>(numItems: number, fn: (ix: number) => Item): Item[] {
     const results: Item[] = [];
     for (let i = 0; i < numItems; i++) {

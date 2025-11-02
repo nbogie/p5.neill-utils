@@ -5,10 +5,20 @@
         "dist"
     ],
     "main": "./dist/p5.neill-utils.umd.js",
-    "homepage": "https://github.com/nbogie/p5.neill-utils",
+    "homepage": "https://nbogie.github.io/p5.neill-utils",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nbogie/p5.neill-utils.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nbogie/p5.neill-utils/issues"
+    },
+    "license": "MIT",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "build:types": "tsc --project tsconfig.dts.json",
+        "build:all": "npm run build && npm run build:types && npm run docs",
         "preview": "vite preview",
         "publish": "npm publish --access public",
         "docs": "typedoc"

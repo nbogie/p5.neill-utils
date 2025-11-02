@@ -42,3 +42,10 @@ The project builds a UMD file which can be loaded into a global mode p5.js sketc
 Removed type: module from package.json
 
 > If the package.json does not contain "type": "module", Vite will generate different file extensions for Node.js compatibility. .js will become .mjs and .cjs will become .js.
+
+###
+
+typescript configs
+
+-   tsconfig.json - the base config. used for type-checking and also extended by...
+-   tsconfig.dts.json - exclusively for generating .d.ts files. Extends tsconfig.json
