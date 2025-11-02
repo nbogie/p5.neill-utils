@@ -19,4 +19,4 @@ logToPage(
 );
 logToPage("zip: ", NeillUtils.zip([1, 2, 3, 4, 5, 6], "abcdefghhi".split("")));
 
-NeillUtils.repeat(10, (ix) => logToPage("repeat() says : " + ix));
+NeillUtils.repeat(4, (ix) => logToPage("repeat() says : " + ix));

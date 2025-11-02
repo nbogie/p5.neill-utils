@@ -1,0 +1,14 @@
+{
+    // 1. Specify the source files for your library
+    "entryPoints": ["./src/index.ts"],
+
+    // 2. Specify the output location within your docs structure
+    "out": "docs/api",
+
+    // 3. Use the Markdown theme for VitePress compatibility
+    // "theme": "markdown",
+
+    // Optional: settings to clean up the output
+    "excludePrivate": true,
+    "gitRevision": "main"
+}
