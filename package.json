@@ -1,6 +1,6 @@
 {
     "name": "@nbogie/p5.neill-utils",
-    "version": "0.0.4",
+    "version": "0.0.6",
     "files": [
         "dist"
     ],
@@ -20,7 +20,7 @@
         "build:types": "tsc --project tsconfig.dts.json",
         "build:all": "npm run build && npm run build:types && npm run docs",
         "preview": "vite preview",
-        "publish": "npm publish --access public",
+        "publish-to-npm": "npm publish --access public",
         "docs": "typedoc"
     },
     "devDependencies": {

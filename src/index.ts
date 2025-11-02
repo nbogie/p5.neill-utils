@@ -5,18 +5,32 @@
  * @see {@link collect} - if you want to collect the returned values from the function instead.
  *
  */
-function repeat(numRepeats: number, fn: (ix: number) => void): void {
+export function repeat(numRepeats: number, fn: (ix: number) => void): void {
     for (let i = 0; i < numRepeats; i++) {
         fn(i);
     }
 }
+
+/**
+ * snaps a value to the nearest increment
+ * @param val value to quantise
+ * @param increment increment by which to snap
+ * @returns new value snapped to nearest increment
+ */
+export function snapTo(val: number, increment: number): number {
+    return Math.round(val / increment) * increment;
+}
+
 /**
  * Builds and returns an array collected from the repeated calling of the given function.
  * @param numItems number of items to collect
  * @param fn function to call repeatedly in order to construct each element of the array.  It will be passed a counter (zero-based) indicating the number of the current iteration.
  * @returns array of constructed items
  */
-function collect<Item>(numItems: number, fn: (ix: number) => Item): Item[] {
+export function collect<Item>(
+    numItems: number,
+    fn: (ix: number) => Item
+): Item[] {
     const results: Item[] = [];
     for (let i = 0; i < numItems; i++) {
         results.push(fn(i));
@@ -31,7 +45,10 @@ function collect<Item>(numItems: number, fn: (ix: number) => Item): Item[] {
  * @param iteratee The function to execute on each element to get the value to compare.
  * @returns The element that produced the minimum value, or undefined if the array is empty.
  */
-function minBy<T, V>(array: T[], iteratee: (value: T) => V): T | undefined {
+export function minBy<T, V>(
+    array: T[],
+    iteratee: (value: T) => V
+): T | undefined {
     if (!array || array.length === 0) {
         return undefined;
     }
@@ -60,7 +77,10 @@ function minBy<T, V>(array: T[], iteratee: (value: T) => V): T | undefined {
  * @param iteratee The function to execute on each element to get the value to compare.
  * @returns The element that produced the maximum value, or undefined if the array is empty.
  */
-function maxBy<T, V>(array: T[], iteratee: (value: T) => V): T | undefined {
+export function maxBy<T, V>(
+    array: T[],
+    iteratee: (value: T) => V
+): T | undefined {
     if (!array || array.length === 0) {
         return undefined;
     }
@@ -92,7 +112,7 @@ function maxBy<T, V>(array: T[], iteratee: (value: T) => V): T | undefined {
  * @param iteratee The function to combine the paired elements.
  * @returns A new array containing the results of the iteratee function.
  */
-function zipWith<T1, T2, TResult>(
+export function zipWith<T1, T2, TResult>(
     array1: T1[],
     array2: T2[],
     iteratee: (value1: T1, value2: T2) => TResult
@@ -118,8 +138,109 @@ function zipWith<T1, T2, TResult>(
  * @param array2 The second array.
  * @returns A new array of tuples containing the paired elements.
  */
-function zip<T1, T2>(array1: T1[], array2: T2[]): [T1, T2][] {
+export function zip<T1, T2>(array1: T1[], array2: T2[]): [T1, T2][] {
     return zipWith(array1, array2, (value1, value2) => [value1, value2]);
 }
 
-export { zip, zipWith, collect, repeat, maxBy, minBy };
+/**
+ * Converts polar coordinates (radius and angle) to Cartesian coordinates (x and y).  Ignores p5's angleMode.
+ * @param angle The angle in radians
+ * @param radius The distance from the origin
+ * @returns An object with {x,y} the Cartesian coordinates.
+ * @see {@link https://p5js.org/reference/p5.Vector/fromAngle/} - If you want a p5.Vector instead
+ */
+export function polarToCartesian(
+    angle: number,
+    radius: number
+): { x: number; y: number } {
+    const x = radius * Math.cos(angle);
+    const y = radius * Math.sin(angle);
+    return { x, y };
+}
+
+// 1. O is the generic type for the config object.
+// 2. K is the generic type for the key, which must be a key of O.
+// 3. We use a conditional type to constrain K to only be a key whose value is a boolean.
+type BooleanKeys<O> = {
+    [K in keyof O]: O[K] extends boolean ? K : never;
+}[keyof O];
+
+/**
+ * Toggles the named boolean property on the given config object in-place.
+ * @param config The configuration object.
+ * @param key The name of the key to toggle. Must be a boolean property.
+ * @throws {Error} If the key does not exist on the object.
+ * @throws {Error} If the property exists but is not a boolean.
+ * @returns {boolean} the new value of the property
+ */
+export function toggleBooleanInConfig<
+    K extends BooleanKeys<O>,
+    O extends object
+>(key: K, config: O): boolean {
+    // The 'in' operator checks for both own and inherited properties.
+    // We use Object.prototype.hasOwnProperty.call for a safer check of only own properties.
+    if (!(key in config)) {
+        throw new Error(`Key '${String(key)}' not found in given config.`);
+    }
+    const currentValue = (config as any)[key];
+
+    if (typeof currentValue !== "boolean") {
+        throw new Error(
+            `Property '${String(key)}' in given config is not boolean`
+        );
+    }
+
+    (config as any)[key] = !currentValue;
+    return (config as any)[key];
+}
+
+// export function mousePos() {
+//     return createVector(mouseX, mouseY);
+// }
+
+// export function prevMousePos() {
+//     return createVector(pmouseX, pmouseY);
+// }
+
+//example
+// doOverGrid(
+//     { w: 300, h: 200 },
+//     { numCols: 10, numRows: 5 },
+//     // @ts-ignore
+//     ({ pixelPos, indexPos }) => circle(pixelPos.x, pixelPos.y, 10)
+// );
+
+//TODO: extract a version of this I've actually used.  this one is horrible.
+//TODO: also provide a version that automatically pushes and translates to the relevant pixel positions.  e.g. doOverGridTranslating
+/**
+ * Call a given function repeatedly over the given grid
+ * @param dimensions of grid
+ * @param num cols and rows
+ * @param cellFn a function to be called for each cell.  it'll be passed the pixel coords and grid coords.
+ */
+export function doOverGrid(
+    { w, h }: { w: number; h: number },
+    { numCols, numRows }: { numCols: number; numRows: number },
+    cellFn: ({
+        pixelPos,
+        indexPos,
+    }: {
+        pixelPos: { x: number; y: number };
+        indexPos: { colIx: number; rowIx: number };
+    }) => void
+) {
+    for (let rowIx = 0; rowIx < numRows; rowIx++) {
+        for (let colIx = 0; colIx < numCols; colIx++) {
+            const x = w * (colIx / numCols);
+            const y = h * (rowIx / numRows);
+            cellFn({ pixelPos: { x, y }, indexPos: { colIx, rowIx } });
+        }
+    }
+}
+
+// export function randomPastel(saturation: number): p5.Color {
+//     push();
+//     const c = color(random(360), saturation, 100);
+//     pop();
+//     return c;
+// }
