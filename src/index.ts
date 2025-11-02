@@ -1,3 +1,11 @@
+//don't use this convenience if it occludes content in intellisense and docs.
+
+/** any object with x and y properties.  Not necessarily a p5.Vector */
+interface SimpleXY {
+    x: number;
+    y: number;
+}
+
 /**
  * Call the given function repeatedly, the given number of times.
  * @param numRepeats number of times to call the given function
@@ -19,6 +27,21 @@ export function repeat(numRepeats: number, fn: (ix: number) => void): void {
  */
 export function snapTo(val: number, increment: number): number {
     return Math.round(val / increment) * increment;
+}
+
+//todo: could just be an overriden version of snapTo?
+/**
+ * Snaps given position to the nearest increment on both axes, returning new position.
+ * @param pos position to quantise.  Unchanged.
+ * @param increment
+ * @returns new position object snapped on both x and y axes to nearest increment
+ */
+export function snapPositionTo(pos: SimpleXY, increment: number): SimpleXY {
+    const [x, y] = [pos.x, pos.y].map((val) => snapTo(val, increment));
+    return {
+        x,
+        y,
+    };
 }
 
 /**
@@ -149,10 +172,7 @@ export function zip<T1, T2>(array1: T1[], array2: T2[]): [T1, T2][] {
  * @returns An object with {x,y} the Cartesian coordinates.
  * @see {@link https://p5js.org/reference/p5.Vector/fromAngle/} - If you want a p5.Vector instead
  */
-export function polarToCartesian(
-    angle: number,
-    radius: number
-): { x: number; y: number } {
+export function polarToCartesian(angle: number, radius: number): SimpleXY {
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);
     return { x, y };
@@ -225,7 +245,7 @@ export function doOverGrid(
         pixelPos,
         indexPos,
     }: {
-        pixelPos: { x: number; y: number };
+        pixelPos: SimpleXY;
         indexPos: { colIx: number; rowIx: number };
     }) => void
 ) {
@@ -243,4 +263,9 @@ export function doOverGrid(
 //     const c = color(random(360), saturation, 100);
 //     pop();
 //     return c;
+// }
+
+//TODO: add when we have p5 types available
+// export function centrePos(): SimpleXY {
+//     return { x: width / 2, y: height / 2 };
 // }

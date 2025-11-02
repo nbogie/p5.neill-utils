@@ -13,6 +13,8 @@ function setup() {
 
 function draw() {
     N.doOverGrid({ w: 300, h: 200 }, { numCols: 10, numRows: 5 }, doOneCell);
+    const p = N.snapPositionTo({ x: 10, y: 20 }, 100);
+    circle(p.x, p.y, 50);
 }
 
 // @ts-ignore

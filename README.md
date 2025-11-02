@@ -49,3 +49,8 @@ typescript configs
 
 -   tsconfig.json - the base config. used for type-checking and also extended by...
 -   tsconfig.dts.json - exclusively for generating .d.ts files. Extends tsconfig.json
+
+### resources
+
+-   https://p5js.org/contribute/creating_libraries/
+-   https://p5js.org/libraries/
