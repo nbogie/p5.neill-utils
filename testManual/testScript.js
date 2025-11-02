@@ -1,5 +1,5 @@
 console.log("testScript.js started");
-console.log(P5NeillUtils.zip([1, 2], "a b c".split(" ")));
+console.log(NeillUtils.zip([1, 2], "a b c".split(" ")));
 
 function logToPage(...args) {
     const divElem = document.createElement("div");
@@ -9,7 +9,14 @@ function logToPage(...args) {
 
 logToPage(
     "hello html world: ",
-    P5NeillUtils.collect(10, (ix) => ix * ix).join(", ")
+    NeillUtils.collect(10, (ix) => ix * ix).join(", ")
 );
+logToPage(
+    "zipWith: ",
+    NeillUtils.zipWith([1, 2, 3, 4, 5, 6], "abcdefghhi".split(""), (n, c) =>
+        c.repeat(n)
+    )
+);
+logToPage("zip: ", NeillUtils.zip([1, 2, 3, 4, 5, 6], "abcdefghhi".split("")));
 
-P5NeillUtils.repeat(10, (ix) => logToPage("repeat() says : " + ix));
+NeillUtils.repeat(10, (ix) => logToPage("repeat() says : " + ix));

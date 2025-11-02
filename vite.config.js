@@ -8,7 +8,8 @@ export default defineConfig({
     build: {
         lib: {
             entry: resolve(__dirname, "src/index.ts"),
-            name: "P5NeillUtils",
+            //this'll be the name of the object/namespace the functions are made available under
+            name: "NeillUtils",
             // the proper extensions will be added
             fileName: "p5.neill-utils",
             formats: ["es", "umd"],
