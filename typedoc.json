@@ -3,7 +3,7 @@
     "entryPoints": ["./src/index.ts"],
 
     // 2. Specify the output location within your docs structure
-    "out": "docs/api",
+    "out": "docs",
 
     // 3. Use the Markdown theme for VitePress compatibility
     // "theme": "markdown",
