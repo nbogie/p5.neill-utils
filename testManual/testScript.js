@@ -8,6 +8,11 @@ function setup() {
     createCanvas(600, 400);
     N.messaging.registerRenderer(myDrawMessages);
     testVariousFunctions();
+
+    N.messaging.postMessagesAtIntervals(["hello", "world", "let's", "go!"], {
+        spacingSec: 0.5,
+        durationSec: 1,
+    });
 }
 
 function draw() {
@@ -36,11 +41,7 @@ function drawGrid() {
     );
 }
 
-/**
- * demo custom renderer for messages
- * @ts-ignore
- * @param {NeillUtils.messaging.Message[]} messages
- */
+//@ts-ignore
 function myDrawMessages(messages) {
     if (messages.length === 0) {
         return;

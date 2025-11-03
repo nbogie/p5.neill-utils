@@ -78,15 +78,15 @@ function defaultRenderMessages(messages: Message[]) {
     pop();
 }
 /** post the given strings as messages distributed over time.
- * @todo: allow the user to specify duration and spacing.
  */
-export function postMessagesAtIntervals(msgTexts: string) {
-    const spacingMs = 1000;
-    const durationMs = 10000;
+export function postMessagesAtIntervals(
+    msgTexts: string[],
+    { spacingSec, durationSec } = { spacingSec: 1, durationSec: 10 }
+) {
     let delayMs = 0;
     for (let msgText of msgTexts) {
-        postMessageLater(msgText, delayMs, durationMs);
-        delayMs += spacingMs;
+        postMessageLater(msgText, delayMs, durationSec * 1000);
+        delayMs += spacingSec * 1000;
     }
 }
 /**
