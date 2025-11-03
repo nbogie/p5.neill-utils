@@ -1,8 +1,15 @@
-A p5 addon library for my personal use containing various utility methods (zip, repeat, collect)
+### What's this?
+
+A p5 addon library just for my personal use containing various utility methods (zip, repeat, collect).
+
+It is janky, badly designed, subject to change, and not currently recommended for use by others.
+
+This document, then, is mostly notes to myself.
 
 ### usage
 
-This is intended to be used in a global mode p5.js script (not as an ES module)
+This is intended to be used in a global mode p5.js script (not as an ES module).
+
 Add
 
 ```html
@@ -15,7 +22,11 @@ to your html and then to your p5.js script add
 const result = NeillUtils.collect(10, (ix) => ix * ix);
 ```
 
-At the moment it doesn't register the functions with p5 so has to be used with that prefix. I like that better than possibly colliding with other loaded libraries, anyway. The namespace will likely change in future.
+At the moment it doesn't register the functions with p5 so has to be used with that prefix.
+
+I like that better than possibly colliding with other loaded libraries, anyway.
+
+The namespace will likely change in future.
 
 ### installation from CDNs
 

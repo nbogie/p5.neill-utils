@@ -1,9 +1,20 @@
-interface World {
-    messages: Message[];
-}
-let world: World = { messages: [] };
+//Some functions for posting and displaying messages.
+//not a robust system.  can't support two sketches at once, for example, and the rendering is hard-coded at the moment.
 
-interface Message {
+interface MessageSystem {
+    messages: Message[];
+    userRenderFunction?: MessagesRenderFunction;
+}
+
+type MessagesRenderFunction = (messages: Message[]) => void;
+
+/** todo: check this messageSystem variable isn't polluting.  */
+let messageSystem: MessageSystem = {
+    messages: [],
+    userRenderFunction: undefined,
+};
+
+export interface Message {
     /** the text of the message */
     msg: string;
     /** time message was posted, in milliseconds since sketch start */
@@ -24,19 +35,38 @@ export function postMessage(str: string, durationMs = 5000) {
         durationMs,
     };
 
-    world.messages.push(message);
+    messageSystem.messages.push(message);
 }
-
+/**
+ * Needs to be called periodically to have old messages culled from message list
+ */
 export function updateMessages() {
-    world.messages = world.messages.filter(
+    messageSystem.messages = messageSystem.messages.filter(
         (m: Message) => millis() < m.postTimeMs + m.durationMs
     );
 }
-//todo: allow the library user to specify a renderer
+
+export function registerRenderer(fn: MessagesRenderFunction) {
+    messageSystem.userRenderFunction = fn;
+}
+
+/** draw the messages on screen. You can override how this is done by first passing a function to registerRenderer() that takes an array of Message objects.
+ * @example
+ * ```js
+ * registerRenderer(myDrawMessagesFn);
+ * drawMessages()
+ * ```
+ */
 export function drawMessages() {
+    const chosenRenderer =
+        messageSystem.userRenderFunction ?? defaultRenderMessages;
+    chosenRenderer(messageSystem.messages);
+}
+
+function defaultRenderMessages(messages: Message[]) {
     push();
     translate(width - 50, 50);
-    for (let m of world.messages) {
+    for (let m of messages) {
         textSize(18);
         textAlign(RIGHT);
         noStroke();
@@ -47,7 +77,9 @@ export function drawMessages() {
     }
     pop();
 }
-
+/** post the given strings as messages distributed over time.
+ * @todo: allow the user to specify duration and spacing.
+ */
 export function postMessagesAtIntervals(msgTexts: string) {
     const spacingMs = 1000;
     const durationMs = 10000;
@@ -57,7 +89,13 @@ export function postMessagesAtIntervals(msgTexts: string) {
         delayMs += spacingMs;
     }
 }
-
+/**
+ *
+ * @param str the text of the message to post
+ * @param delayMs how long to wait before posting the message
+ * @param durationMs how long after posting should the message endure in the system?
+ * @returns the timeoutId returned from setTimeout, in case the user wants to clear it.
+ */
 export function postMessageLater(
     str: string,
     delayMs: number,
@@ -65,7 +103,9 @@ export function postMessageLater(
 ) {
     return setTimeout(() => postMessage(str, durationMs), delayMs);
 }
-
+/**
+ * remove all messages from the system
+ */
 export function clearMessages() {
-    world.messages = [];
+    messageSystem.messages = [];
 }

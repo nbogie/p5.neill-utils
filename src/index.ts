@@ -268,7 +268,8 @@ export function prevMousePos(): p5.Vector {
     return createVector(pmouseX, pmouseY);
 }
 
-/** todo: have a single function for any dimensionality vector */
+//todo: have a single function for any dimensionality vector
+/** round the elements of the given vector, returning a new vector */
 export function roundVec2D(v: p5.Vector): p5.Vector {
     console.log("to str: ", v.toString());
     return createVector(Math.round(v.x), Math.round(v.y));
@@ -278,8 +279,9 @@ export function roundVec3D(v: p5.Vector): p5.Vector {
     return createVector(Math.round(v.x), Math.round(v.y), Math.round(v.z));
 }
 
-/** turn vector into string form (x,y) - by default will round the elements, but you can pass fractionDigits arg and it will include that many.
- * @todo have one function for 2d, 3d, and Nd
+// todo: Have one function for 2d, 3d, and Nd
+/**
+ * turn given vector into string form (x,y) - by default will round the elements, but you can pass fractionDigits arg and it will include that many.
  */
 export function vec2DToString(
     v: p5.Vector,
