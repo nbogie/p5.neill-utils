@@ -1,7 +1,8 @@
+/// <reference path="./global.d.ts" />
+
 const N = NeillUtils;
 
 //not certain this is needed - depends on where tsconfig /jsconfig has told the tls to look
-/// <reference path="./global.d.ts" />
 
 let config = { lit: true, dogs: false, name: "rex" };
 console.log("testScript.js started");
@@ -14,9 +15,16 @@ function setup() {
 function draw() {
     N.doOverGrid({ w: 300, h: 200 }, { numCols: 10, numRows: 5 }, doOneCell);
     const p = N.snapPositionTo({ x: 10, y: 20 }, 100);
-    circle(p.x, p.y, 50);
+
+    push();
+    translate(N.mousePos());
+    circle(0, 0, 50);
+    pop();
 }
 
+function mousePressed() {
+    redraw();
+}
 // @ts-ignore
 function doOneCell({ pixelPos, indexPos }) {
     fill(random(255));

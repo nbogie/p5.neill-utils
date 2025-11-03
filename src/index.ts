@@ -214,14 +214,6 @@ export function toggleBooleanInConfig<
     return (config as any)[key];
 }
 
-// export function mousePos() {
-//     return createVector(mouseX, mouseY);
-// }
-
-// export function prevMousePos() {
-//     return createVector(pmouseX, pmouseY);
-// }
-
 //example
 // doOverGrid(
 //     { w: 300, h: 200 },
@@ -265,7 +257,14 @@ export function doOverGrid(
 //     return c;
 // }
 
-//TODO: add when we have p5 types available
-// export function centrePos(): SimpleXY {
-//     return { x: width / 2, y: height / 2 };
-// }
+export function centrePos(): p5.Vector {
+    return createVector(width / 2, height / 2);
+}
+
+export function mousePos(): p5.Vector {
+    return createVector(mouseX, mouseY);
+}
+
+export function prevMousePos(): p5.Vector {
+    return createVector(pmouseX, pmouseY);
+}
