@@ -6,6 +6,8 @@ interface SimpleXY {
     y: number;
 }
 
+import * as messaging from "./messaging.ts";
+export { messaging };
 /**
  * Call the given function repeatedly, the given number of times.
  * @param numRepeats number of times to call the given function
@@ -215,11 +217,8 @@ export function toggleBooleanInConfig<
 }
 
 //example
-// doOverGrid(
-//     { w: 300, h: 200 },
-//     { numCols: 10, numRows: 5 },
-//     // @ts-ignore
-//     ({ pixelPos, indexPos }) => circle(pixelPos.x, pixelPos.y, 10)
+// doOverGrid({ w: 300, h: 200 }, { numCols: 10, numRows: 5 }, ({ pixelPos }) =>
+//     circle(pixelPos.x, pixelPos.y, 10)
 // );
 
 //TODO: extract a version of this I've actually used.  this one is horrible.
@@ -267,4 +266,24 @@ export function mousePos(): p5.Vector {
 
 export function prevMousePos(): p5.Vector {
     return createVector(pmouseX, pmouseY);
+}
+
+/** todo: have a single function for any dimensionality vector */
+export function roundVec2D(v: p5.Vector): p5.Vector {
+    console.log("to str: ", v.toString());
+    return createVector(Math.round(v.x), Math.round(v.y));
+}
+
+export function roundVec3D(v: p5.Vector): p5.Vector {
+    return createVector(Math.round(v.x), Math.round(v.y), Math.round(v.z));
+}
+
+/** turn vector into string form (x,y) - by default will round the elements, but you can pass fractionDigits arg and it will include that many.
+ * @todo have one function for 2d, 3d, and Nd
+ */
+export function vec2DToString(
+    v: p5.Vector,
+    fractionDigits: number = 0
+): string {
+    return [v.x, v.y].map((val) => val.toFixed(fractionDigits)).join(",");
 }

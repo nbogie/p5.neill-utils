@@ -2,34 +2,37 @@
 
 const N = NeillUtils;
 
-//not certain this is needed - depends on where tsconfig /jsconfig has told the tls to look
-
 let config = { lit: true, dogs: false, name: "rex" };
 console.log("testScript.js started");
 
 function setup() {
     createCanvas(600, 400);
-    noLoop();
 }
 
 function draw() {
-    N.doOverGrid({ w: 300, h: 200 }, { numCols: 10, numRows: 5 }, doOneCell);
+    background(100);
+
+    N.doOverGrid(
+        { w: 300, h: 200 },
+        { numCols: 10, numRows: 5 },
+        ({ pixelPos, indexPos }) => {
+            fill(indexPos.colIx * 25);
+            circle(pixelPos.x, pixelPos.y, 10);
+        }
+    );
     const p = N.snapPositionTo({ x: 10, y: 20 }, 100);
 
     push();
     translate(N.mousePos());
     circle(0, 0, 50);
     pop();
+    N.messaging.drawMessages();
+    N.messaging.updateMessages();
 }
 
 function mousePressed() {
+    N.messaging.postMessage("mousePressed at " + N.vec2DToString(N.mousePos()));
     redraw();
-}
-// @ts-ignore
-function doOneCell({ pixelPos, indexPos }) {
-    fill(random(255));
-    circle(pixelPos.x, pixelPos.y, 10);
-    N.toggleBooleanInConfig("dogs", config);
 }
 
 function logIt() {
