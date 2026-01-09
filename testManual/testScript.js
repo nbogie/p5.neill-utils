@@ -31,12 +31,16 @@ function draw() {
 }
 
 function drawGrid() {
+    randomSeed(second());
+
     N.doOverGrid(
         { w: 300, h: 200 },
         { numCols: 10, numRows: 5 },
         ({ pixelPos, indexPos }) => {
-            fill(indexPos.colIx * 25);
-            circle(pixelPos.x, pixelPos.y, 20);
+            const weighting = map(indexPos.rowIx, 0, 5, 0.9, 0.2, true);
+            const c = N.pickBiased(palette.colors, weighting);
+            fill(c);
+            circle(100 + pixelPos.x, 100 + pixelPos.y, 20);
         }
     );
 }
@@ -98,3 +102,12 @@ function mousePressed() {
     N.messaging.postMessage("mousePressed at " + N.vec2DToString(N.mousePos()));
     redraw();
 }
+
+const palette = {
+    name: "tsu_arcade",
+    colors: ["#544e47", "#d1af84", "#f3b551", "#cec8b8", "#4aad8b", "#e15147"],
+    stroke: "#251c12",
+    background: "#cfc7b9",
+    size: 6,
+    type: "chromotome",
+};

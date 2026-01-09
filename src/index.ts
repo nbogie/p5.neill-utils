@@ -289,3 +289,16 @@ export function vec2DToString(
 ): string {
     return [v.x, v.y].map((val) => val.toFixed(fractionDigits)).join(",");
 }
+
+/**
+ * Pick from an array preferring the earlier elements, based on exponential distribution
+ */
+export function pickBiased<T>(arr: T[], decay = 0.5): T {
+    if (arr.length === 0) {
+        throw new Error("can't pick from empty array");
+    }
+    const arrayLength = arr.length;
+    const index = Math.floor(Math.log(1 - random()) / Math.log(1 - decay));
+    const indexCapped = Math.min(index, arrayLength - 1);
+    return arr[indexCapped];
+}
