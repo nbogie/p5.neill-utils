@@ -1,5 +1,9 @@
-//Some functions for posting and displaying messages.
-//not a robust system.  can't support two sketches at once, for example, and the rendering is hard-coded at the moment.
+/**
+ * Some functions for posting messages and having them displayed on screen for some time.
+ *
+ * This is not a robust system.  It can't support two sketches at once, for example.
+ * @module
+ */
 
 interface MessageSystem {
     messages: Message[];
