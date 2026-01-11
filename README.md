@@ -40,9 +40,9 @@ You can also specify the exact single file but I think most CDNs will serve it c
 
 ### How's it made?
 
-Made following these guidelines [as described here](https://p5js.org/contribute/creating_libraries/), and vite library mode.
+Uses vite and typescript. Builds to a single umd javascript file using [vite library mode](https://vite.dev/guide/build.html#library-mode).
 
-Using vite and typescript. builds to a single umd javascript file.
+Loosely following the guidelines for creating p5 libraries [found here](https://p5js.org/contribute/creating_libraries/).
 
 ### Build outputs
 
@@ -65,3 +65,4 @@ typescript configs
 
 -   https://p5js.org/contribute/creating_libraries/
 -   https://p5js.org/libraries/
+-   https://vite.dev/guide/build.html#library-mode
