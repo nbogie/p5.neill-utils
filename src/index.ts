@@ -302,3 +302,50 @@ export function pickBiased<T>(arr: T[], decay = 0.5): T {
     const indexCapped = Math.min(index, arrayLength - 1);
     return arr[indexCapped];
 }
+
+type FrameRateWidget = {
+    /** the html element we'll write into */
+    pElem: p5.Element;
+    targetNumSamples: number;
+    samples: number[];
+    /** maintained between frames so we only need to account
+     * for one new and one lost sample.*/
+    sum: 0;
+};
+
+export function createFrameRateWidget(canvasElement?: p5.Element) {
+    const pElem = createP();
+    let cnv = canvasElement ?? (select("#defaultCanvas0") as p5.Element);
+    if (!cnv) {
+        throw new Error("Can't find default canvas. Did you try passing one?");
+    }
+    let x = (cnv.position() as { x: number; y: number }).x + width;
+    let y = (cnv.position() as { x: number; y: number }).y;
+
+    pElem.position(x, y);
+    pElem.style("position", "absolute");
+    pElem.style("padding-right", "1rem");
+    pElem.style("transform", "translateX(-100%)");
+
+    return {
+        pElem,
+        targetNumSamples: 30,
+        samples: [] as number[],
+
+        sum: 0,
+    };
+}
+
+export function updateAndDrawFrameRate(widget: FrameRateWidget) {
+    let newSample = frameRate();
+    widget.samples.push(newSample);
+    widget.sum += newSample;
+
+    //full?  get rid of one and update the sum accordingly
+    if (widget.samples.length > widget.targetNumSamples) {
+        widget.sum -= widget.samples.shift()!;
+    }
+
+    const avg = round(widget.sum / widget.samples.length);
+    widget.pElem.html("FPS: " + avg);
+}
