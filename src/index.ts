@@ -349,3 +349,41 @@ export function updateAndDrawFrameRate(widget: FrameRateWidget) {
     const avg = round(widget.sum / widget.samples.length);
     widget.pElem.html("FPS: " + avg);
 }
+
+// generate a function which cycles through a shuffled copy of the given array (or some slice of it),
+// shuffling it again when it gets to the end,
+// but never outputting the same element twice in succession
+// assumes p5.js's shuffle function
+export function generateNonRepeatingCycler<T>(arr: T[], limit: number) {
+    function shuffleNonRepeating(arr: T[], prevIx: number) {
+        let localArr = [...arr];
+        //time to shuffle.  temporarily remove the previous value, shuffle, and re-add in non-1st position
+        //remove prev val from localArr
+        const [prevVal] = localArr.splice(prevIx, 1);
+        localArr = shuffle(localArr);
+        //put it back in somewhere NOT 1st position
+        const insertIx = getRandomNonFirstArrayIndex(localArr);
+        //             (start, deleteCount, itemToInsert)
+        localArr.splice(insertIx, 0, prevVal);
+        return localArr;
+    }
+
+    function getRandomNonFirstArrayIndex(arr: T[]) {
+        return Math.floor(Math.random() * arr.length) + 1;
+    }
+
+    let ix = 0;
+    let localArr = shuffle(arr).slice(0, limit);
+
+    function next() {
+        const val = localArr[ix];
+        ix++;
+        //this new ix is no good. prep array for the next call
+        if (ix >= localArr.length) {
+            localArr = shuffleNonRepeating(localArr, ix - 1);
+            ix = 0;
+        }
+        return val;
+    }
+    return next;
+}
