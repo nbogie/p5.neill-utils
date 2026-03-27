@@ -54,7 +54,7 @@ export function snapPositionTo(pos: SimpleXY, increment: number): SimpleXY {
  */
 export function collect<Item>(
     numItems: number,
-    fn: (ix: number) => Item
+    fn: (ix: number) => Item,
 ): Item[] {
     const results: Item[] = [];
     for (let i = 0; i < numItems; i++) {
@@ -72,7 +72,7 @@ export function collect<Item>(
  */
 export function minBy<T, V>(
     array: T[],
-    iteratee: (value: T) => V
+    iteratee: (value: T) => V,
 ): T | undefined {
     if (!array || array.length === 0) {
         return undefined;
@@ -104,7 +104,7 @@ export function minBy<T, V>(
  */
 export function maxBy<T, V>(
     array: T[],
-    iteratee: (value: T) => V
+    iteratee: (value: T) => V,
 ): T | undefined {
     if (!array || array.length === 0) {
         return undefined;
@@ -140,7 +140,7 @@ export function maxBy<T, V>(
 export function zipWith<T1, T2, TResult>(
     array1: T1[],
     array2: T2[],
-    iteratee: (value1: T1, value2: T2) => TResult
+    iteratee: (value1: T1, value2: T2) => TResult,
 ): TResult[] {
     // Determine the length of the shortest array
     const length = Math.min(array1.length, array2.length);
@@ -197,7 +197,7 @@ type BooleanKeys<O> = {
  */
 export function toggleBooleanInConfig<
     K extends BooleanKeys<O>,
-    O extends object
+    O extends object,
 >(key: K, config: O): boolean {
     // The 'in' operator checks for both own and inherited properties.
     // We use Object.prototype.hasOwnProperty.call for a safer check of only own properties.
@@ -208,7 +208,7 @@ export function toggleBooleanInConfig<
 
     if (typeof currentValue !== "boolean") {
         throw new Error(
-            `Property '${String(key)}' in given config is not boolean`
+            `Property '${String(key)}' in given config is not boolean`,
         );
     }
 
@@ -238,7 +238,7 @@ export function doOverGrid(
     }: {
         pixelPos: SimpleXY;
         indexPos: { colIx: number; rowIx: number };
-    }) => void
+    }) => void,
 ) {
     for (let rowIx = 0; rowIx < numRows; rowIx++) {
         for (let colIx = 0; colIx < numCols; colIx++) {
@@ -285,7 +285,7 @@ export function roundVec3D(v: p5.Vector): p5.Vector {
  */
 export function vec2DToString(
     v: p5.Vector,
-    fractionDigits: number = 0
+    fractionDigits: number = 0,
 ): string {
     return [v.x, v.y].map((val) => val.toFixed(fractionDigits)).join(",");
 }
@@ -386,4 +386,51 @@ export function generateNonRepeatingCycler<T>(arr: T[], limit: number) {
         return val;
     }
     return next;
+}
+
+/**
+ * calculates average colour in a given image, allowing for alpha of each pixel
+ */
+export function calcAverageColourInImage(img: p5.Image): {
+    averageColour: p5.Color;
+    nonTransparentCount: number;
+} {
+    img.loadPixels();
+    let nonTransparentCount = 0;
+    let sums = { r: 0, g: 0, b: 0, a: 0 };
+
+    for (let i = 0; i < img.pixels.length; i += 4) {
+        const r = img.pixels[i + 0];
+        const g = img.pixels[i + 1];
+        const b = img.pixels[i + 2];
+        const a = img.pixels[i + 3];
+
+        // 0-1
+        const alphaWeight = a / 255;
+
+        // Weigh the squared RGB by its actual visibility ("premultiplied alpha")
+        // we're squaring for gamma correction - colour amounts aren't linear
+        sums.r += r * r * alphaWeight;
+        sums.g += g * g * alphaWeight;
+        sums.b += b * b * alphaWeight;
+
+        sums.a += a;
+        if (a > 0) {
+            nonTransparentCount++;
+        }
+    }
+
+    const alphaContrib = sums.a === 0 ? 1 : sums.a / 255;
+
+    const totalPixels = img.pixels.length / 4;
+    //remove the alpha pre-multiplication and the gamma correction
+    const avgR = Math.sqrt(sums.r / alphaContrib);
+    const avgG = Math.sqrt(sums.g / alphaContrib);
+    const avgB = Math.sqrt(sums.b / alphaContrib);
+    const avgA = sums.a / totalPixels;
+
+    return {
+        nonTransparentCount,
+        averageColour: color(avgR, avgG, avgB, avgA),
+    };
 }
