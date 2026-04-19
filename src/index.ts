@@ -31,6 +31,13 @@ export function snapTo(val: number, increment: number): number {
     return Math.round(val / increment) * increment;
 }
 
+/** returns a quantised version of millis that can give the effect of an apparent different frame rate to whatever it's applied to (perhaps for stop motion).
+ * @param apparentFrameRate e.g. 10 would mean the returned millis value would be quantised to 100ms intervals (1000/10).  It's probably better to mod this function to have it draw upon a config.apparentFrameRate for global stop motion effects and simpler-looking code.
+ */
+export function choppyMillis(apparentFrameRate:number){
+	return snapTo(millis(),  1000/apparentFrameRate);
+}
+
 //todo: could just be an overriden version of snapTo?
 /**
  * Snaps given position to the nearest increment on both axes, returning new position.
