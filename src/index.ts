@@ -442,3 +442,17 @@ export function calcAverageColourInImage(img: p5.Image): {
         averageColour: color(avgR, avgG, avgB, avgA),
     };
 }
+
+/**
+ * 
+ * @param rOut outer radius
+ * @param rIn  inner radius
+ * @returns random position uniformly distributed in a ring between rOut and rIn
+ * r = √(u·(R² − r_inner²) + r_inner²) where u is a uniform random num from 0-1, and R is the outer radius
+ * (angle is uniform)
+ */
+export function randomPositionInRing(rOut:number, rIn:number):p5.Vector {
+  const angle = random(TWO_PI);
+  const r = sqrt(random() * (pow(rOut, 2) - pow(rIn, 2)) + pow(rIn, 2)) ;
+  return p5.Vector.fromAngle(angle, r);
+}
