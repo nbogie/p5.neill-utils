@@ -46,7 +46,7 @@ Loosely following the guidelines for creating p5 libraries [found here](https://
 
 ### Build outputs
 
-`yarn build`
+`pnpm build`
 
 The project builds a UMD file which can be loaded into a global mode p5.js sketch by the browser.
 
