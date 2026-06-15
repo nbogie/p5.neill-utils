@@ -1,10 +1,14 @@
 /// <reference path="./global.d.ts" />
 
+// const { repeat, randomPositionInRing } = require("../src/index.ts");
+
+console.log("in testScript.js")
 const N = NeillUtils;
 
 let config = { lit: true, dogs: false, name: "rex" };
 
 function setup() {
+    console.log("in setup()")
     createCanvas(600, 400);
     N.messaging.registerRenderer(myDrawMessages);
     testVariousFunctions();
@@ -26,10 +30,22 @@ function draw() {
     circle(0, 0, 50);
     pop();
 
+    drawPointsOnRing();
+
     N.messaging.drawMessages();
     N.messaging.updateMessages();
 }
 
+function drawPointsOnRing(){
+    const r = min(width, height) * 0.2;
+
+    
+    N.repeat(1000, () => {        
+        
+        point(N.randomPositionInRing(r, r*0.5).add(N.mousePos()))
+
+    })
+}
 function drawGrid() {
     randomSeed(second());
 
